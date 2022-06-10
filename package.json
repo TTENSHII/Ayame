@@ -1,0 +1,19 @@
+{
+  "name": "ayame",
+  "version": "1.0.0",
+  "description": "epitech experience nodejs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TTENSHII/Ayame.git"
+  },
+  "author": "tenshi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TTENSHII/Ayame/issues"
+  },
+  "homepage": "https://github.com/TTENSHII/Ayame#readme"
+}
