@@ -3,21 +3,30 @@ const config = require('./config/config.json');
 const fs = require('fs');
 const { Client, Intents, Collection } = require('discord.js');
 
-const bot = new Client({intents: [Intents.FLAGS.GUILDS]});
-bot.commands = new Collection();
+const ytdl = require('ytdl-core');
 
-const handleCommand = require('./helpers/handleCommand');
-const commandFiles = fs.readdirSync('./commandSlash').filter(file => file.endsWith('.js'));
+const { joinVoiceChannel, createAudioPlayer, createAudioResource } = require('@discordjs/voice');
 
-for (const file of commandFiles) {
-	const command = require(`./commandSlash/${file}`);
-	bot.commands.set(command.data.name, command);
-}
+const bot = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES]});
 
-bot.on('interactionCreate', interaction => {
-	if (interaction.isCommand())
-		handleCommand(bot, interaction);
-});
+bot.on('messageCreate', message => {
+    if(message.content === '!join') {
+        const connection = joinVoiceChannel({
+            channelId: message.member.voice.channel.id,
+            guildId: message.guild.id,
+            adapterCreator: message.guild.voiceAdapterCreator
+        })
+        const stream = ytdl('https://www.youtube.com/watch?v=Mzk6KkyxXC8', {
+            filter: "audioonly"
+        });
+
+        const player = createAudioPlayer();
+        const resource = createAudioResource(stream);
+        resource.volume = 0.5;
+        player.play(resource);
+        connection.subscribe(player);
+    }
+})
 
 bot.once('ready', () => {
 	bot.user.setPresence({
